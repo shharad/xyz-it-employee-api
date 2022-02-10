@@ -1,0 +1,125 @@
+openapi: 3.0.0
+info:
+  version: 1.0.0
+  title: xyz-it-employee-api
+  description: API to perform employee data manipulations
+tags:
+  - name: IT-DEPARTMENT 
+    description: Operations related to IT Department
+paths:
+  /it/employee:
+    post:
+      summary: Create IT Employee data in the SQL Server
+      description: Endpoint to send the employee data to the data source
+      operationId: postEmployeeDetails
+      requestBody:
+        $ref: >-
+          https://api.swaggerhub.com/domains/ETISALAT3/xyz-empoyee-domain/1.0.0#/components/requestBodies/upsertemployee
+      responses:
+        '201':
+          description: Success Data Response
+          content:
+            application/json:
+              example:
+                Message: Record has been inserted successfully
+    get:
+      summary: Endpoint to get the details of employee based on Designation and DOJ
+      description: get the details of employee based on Designation and DOJ
+      operationId: getEmployeeDetails
+      parameters:
+        - in: query
+          name: designation
+          required: false
+          schema:
+            type: string
+            enum:
+              - Architect
+              - TL
+              - SSE
+              - Consultant
+        - in: query
+          name: doj
+          required: true
+          schema:
+            type: string
+            example: 21-02-2021
+      responses:
+        '200':
+          description: Success Response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: >-
+                    https://api.swaggerhub.com/domains/ETISALAT3/xyz-empoyee-domain/1.0.0#/components/schemas/employeeDetails
+  /it/employee/{id}:
+    get:
+      summary: Get Employee details based on ID
+      description: Endpoint to get  the employee data from the datasource
+      operationId: getEmployeebyID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+            pattern: ^\d{3}-\d{2}-\d{4}$
+            example: 12352
+      responses:
+        '200':
+          description: Success Response
+          content:
+            application/json:
+              schema:
+                $ref: >-
+                  https://api.swaggerhub.com/domains/ETISALAT3/xyz-empoyee-domain/1.0.0#/components/schemas/employeeDetails
+    put:
+      summary: Update Employee details based on ID
+      description: Endpoint to update  the employee data from the datasource
+      operationId: putEmployeebyID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+            pattern: ^\d{3}-\d{2}-\d{4}$
+            example: 12352
+      requestBody:
+        $ref: >-
+          https://api.swaggerhub.com/domains/ETISALAT3/xyz-empoyee-domain/1.0.0#/components/requestBodies/upsertemployee
+      responses:
+        '200':
+          description: Update data response
+          content:
+            application/json:
+              example:
+                Message: Record has been updated successfully
+    delete:
+      summary: Delete Employee details based on ID
+      description: Endpoint to delete  the employee data from the datasource
+      operationId: deleteEmployeebyID
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+            pattern: ^\d{3}-\d{2}-\d{4}$
+            example: 12352
+      responses:
+        '200':
+          description: Update data response
+          content:
+            application/json:
+              example:
+                Message: Record has been deleted successfully
+servers:
+  - description: SwaggerHub API Auto Mocking
+    url: >-
+      https://virtserver.swaggerhub.com/ETISALAT-BATCH1/xyz-it-employee-api/1.0.0
+  - description: MuleSoft SErver Implementest for testing
+    url: http://xyz-it-employee-api.us-e2.cloudhub.io/api
+  - description: Actual Rest Server Implementation - Weblogic
+    url: https://bfmp.etisalat.corp.ae/bfmp_api
