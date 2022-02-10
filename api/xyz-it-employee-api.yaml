@@ -4,7 +4,7 @@ info:
   description: API to perform employee data manipulations - XXXX for testing
   version: 1.0.0
 servers:
-- url: https://virtserver.swaggerhub.com/ETISALAT-BATCH1/xyz-it-employee-api/1.0.0
+- url: https://virtserver.swaggerhub.com/ETISALAT-BATCH1/xyz-it-employee-api/1.0.0 
   description: SwaggerHub API Auto Mocking
 - url: http://xyz-it-employee-api.us-e2.cloudhub.io/api
   description: MuleSoft SErver Implementest for testing
