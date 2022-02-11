@@ -1,0 +1,164 @@
+openapi: 3.0.0
+info:
+  title: xyz-it-employee-api
+  description: API to perform employee data manipulations - XXXX for testing
+  version: 1.0.0
+servers:
+- url: https://virtserver.swaggerhub.com/ETISALAT-BATCH1/xyz-it-employee-api/1.0.0 
+  description: SwaggerHub API Auto Mocking
+- url: http://xyz-it-employee-api.us-e2.cloudhub.io/api
+  description: MuleSoft SErver Implementest for testing
+- url: https://bfmp.etisalat.corp.ae/bfmp_api
+  description: Actual Rest Server Implementation - Weblogic
+tags:
+- name: IT-DEPARTMENT
+  description: Operations related to IT Department
+paths:
+  /it/employee:
+    get:
+      summary: Endpoint to get the details of employee based on Designation and DOJ
+      description: get the details of employee based on Designation and DOJ
+      operationId: getEmployeeDetails
+      parameters:
+      - name: designation
+        in: query
+        required: false
+        style: form
+        explode: true
+        schema:
+          type: string
+          enum:
+          - Architect
+          - TL
+          - SSE
+          - Consultant
+      - name: doj
+        in: query
+        required: true
+        style: form
+        explode: true
+        schema:
+          type: string
+          example: 21-02-2021
+      responses:
+        "200":
+          description: Success Response
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/employeeDetails'
+    post:
+      summary: Create IT Employee data in the SQL Server
+      description: Endpoint to send the employee data to the data source
+      operationId: postEmployeeDetails
+      requestBody:
+        $ref: '#/components/requestBodies/upsertemployee'
+      responses:
+        "201":
+          description: Success Data Response
+          content:
+            application/json:
+              example:
+                Message: Record has been inserted successfully
+  /it/employee/{id}:
+    get:
+      summary: Get Employee details based on ID
+      description: Endpoint to get  the employee data from the datasource
+      operationId: getEmployeebyID
+      parameters:
+      - name: id
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          pattern: "^\\d{3}-\\d{2}-\\d{4}$"
+          type: string
+          example: "12352"
+      responses:
+        "200":
+          description: Success Response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/employeeDetails'
+    put:
+      summary: Update Employee details based on ID
+      description: Endpoint to update  the employee data from the datasource
+      operationId: putEmployeebyID
+      parameters:
+      - name: id
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          pattern: "^\\d{3}-\\d{2}-\\d{4}$"
+          type: string
+          example: "12352"
+      requestBody:
+        $ref: '#/components/requestBodies/upsertemployee'
+      responses:
+        "200":
+          description: Update data response
+          content:
+            application/json:
+              example:
+                Message: Record has been updated successfully
+    delete:
+      summary: Delete Employee details based on ID
+      description: Endpoint to delete  the employee data from the datasource
+      operationId: deleteEmployeebyID
+      parameters:
+      - name: id
+        in: path
+        required: true
+        style: simple
+        explode: false
+        schema:
+          pattern: "^\\d{3}-\\d{2}-\\d{4}$"
+          type: string
+          example: "12352"
+      responses:
+        "200":
+          description: Update data response
+          content:
+            application/json:
+              example:
+                Message: Record has been deleted successfully
+components:
+  schemas:
+    employeeDetails:
+      properties:
+        Name:
+          type: string
+          example: Sam
+        Age:
+          type: number
+          example: 34
+        Gender:
+          type: string
+          example: M
+        DOB:
+          type: string
+          example: 22-09-2001
+        DOJ:
+          type: string
+          example: 22-01-2021
+        Designation:
+          type: string
+          example: SSE
+        Supervisor:
+          type: string
+          example: Tim
+        Worklocation:
+          type: string
+          example: US
+  requestBodies:
+    upsertemployee:
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/employeeDetails'
